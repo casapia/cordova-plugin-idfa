@@ -1,0 +1,6 @@
+{
+    "dependencies": {
+        "plist": "^3.0.6",
+        "cordova-common": "4.1.0"
+    }
+}

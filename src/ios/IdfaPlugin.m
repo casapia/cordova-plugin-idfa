@@ -39,22 +39,22 @@
     CDVPluginResult* pluginResult = nil;
 
     if (@available(iOS 14, *)) {
-        ATTrackingManagerAuthorizationStatus authStatus = ATTrackingManager.trackingAuthorizationStatus;
-
-        switch (authStatus) {
-            case ATTrackingManagerAuthorizationStatusAuthorized:
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
-                break;
-            case ATTrackingManagerAuthorizationStatusDenied:
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:2];
-                break;
-            case ATTrackingManagerAuthorizationStatusNotDetermined:
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
-                break;
-            case ATTrackingManagerAuthorizationStatusRestricted:
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:3];
-                break;
-        }
+        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+            switch (authStatus) {
+                case ATTrackingManagerAuthorizationStatusAuthorized:
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+                    break;
+                case ATTrackingManagerAuthorizationStatusDenied:
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:2];
+                    break;
+                case ATTrackingManagerAuthorizationStatusNotDetermined:
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+                    break;
+                case ATTrackingManagerAuthorizationStatusRestricted:
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:3];
+                    break;
+            }
+        }];
     } else {
         // Fallback on earlier versions
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Not available on this iOS version"];

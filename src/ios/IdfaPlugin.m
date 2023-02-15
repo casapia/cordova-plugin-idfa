@@ -40,27 +40,14 @@
 
     if (@available(iOS 14, *)) {
         [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
-            switch (authStatus) {
-                case ATTrackingManagerAuthorizationStatusAuthorized:
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
-                    break;
-                case ATTrackingManagerAuthorizationStatusDenied:
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:2];
-                    break;
-                case ATTrackingManagerAuthorizationStatusNotDetermined:
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
-                    break;
-                case ATTrackingManagerAuthorizationStatusRestricted:
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:3];
-                    break;
-            }
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsNSInteger:status];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }];
     } else {
         // Fallback on earlier versions
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Not available on this iOS version"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
-
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 @end

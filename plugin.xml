@@ -27,7 +27,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         <config-file target="config.xml" parent="/*">
             <feature name="Idfa">
                 <param name="ios-package" value="IdfaPlugin" />
-                <param name="onload" value="true" />
             </feature>
         </config-file>
         <config-file target="*-Info.plist" parent="NSUserTrackingUsageDescription">

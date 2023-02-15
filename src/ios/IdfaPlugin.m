@@ -35,19 +35,21 @@
     }];
 }
 
-- (void)requestPermission:(CDVInvokedUrlCommand*)command {
-    CDVPluginResult* pluginResult = nil;
-
-    if (@available(iOS 14, *)) {
-        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsNSInteger:(NSInteger)status];
+- (void)requestPermission:(CDVInvokedUrlCommand *)command {
+    [self.commandDelegate runInBackground:^{
+        if (@available(iOS 14, *)) {
+            [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+                CDVPluginResult* pluginResult =
+                    [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsNSUInteger:status];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }];
+        } else {
+            CDVPluginResult* pluginResult = [CDVPluginResult
+                                             resultWithStatus:CDVCommandStatus_ERROR
+                                             messageAsString:@"requestPermission is supported only for iOS >= 14"];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-        }];
-    } else {
-        // Fallback on earlier versions
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Not available on this iOS version"];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    }
+        }
+    }];
 }
 
 @end
